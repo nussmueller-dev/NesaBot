@@ -6,6 +6,7 @@ class TokenHandler {
     
     static async GetToken() {
         const browser = await puppeteer.launch({
+            args: ['--no-sandbox'],
             executablePath: '/usr/bin/chromium-browser'
         });
         

@@ -1,7 +1,7 @@
-FROM node:lts
+FROM node:lts-alpine
+ENV TZ=Europe/Zurich
 
-# ENV DEBIAN_FRONTEND=noninteractive
-# RUN apt update && apt install -y chromium-browser && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache chromium && apk add tzdata
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -18,5 +18,7 @@ RUN npm ci --only=production
 
 # Bundle app source
 COPY . .
+
+RUN echo -n > data.json
 
 CMD [ "node", "index.js" ]

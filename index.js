@@ -2,9 +2,9 @@ const { Client, Intents } = require("discord.js");
 const fs = require("fs");
 const moment = require("moment");
 const axios = require("axios");
+const schedule = require("node-schedule");
 const config = require("./config.json");
 const TokenHandler = require("./tokenHandler.js");
-const schedule = require("node-schedule");
 
 const intents = new Intents([
   Intents.FLAGS.GUILDS,
@@ -21,9 +21,14 @@ let chanels = [];
 let checkedMarks = [];
 let usersToMention = [];
 
-const job = schedule.scheduleJob("*/15 * * * *", function () {
-  CheckMarks();
-  console.log(`ScheduleJob at ${lastReloadTime.format("DD.MM.YYYY HH:mm:ss")}`);
+const job = schedule.scheduleJob("*/30 * * * *", function () {
+  let maxTimeoutMinutes = 11;
+  let timeoutMills = Math.floor(Math.random() * (maxTimeoutMinutes * 60 * 1000));
+
+  setTimeout(() => {
+    CheckMarks();
+    console.log(`ScheduleJob at ${lastReloadTime.format("DD.MM.YYYY HH:mm:ss")}`);
+  }, timeoutMills);
 });
 
 LoadData();
@@ -38,16 +43,10 @@ client.on("messageCreate", async function (message) {
 
   const commandBody = message.content.slice(discordPrefix.length).toLowerCase();
 
-  if (commandBody === "join") {
-    if (chanels.includes(message.channelId)) {
-      message.reply("Guten Tag, ich bin bereits hier");
-    } else {
-      chanels.push(message.channelId);
-      StoreData();
-
-      console.log(`Joinde chanel ${message.channel.name}`);
-      message.reply("Okay, bin diesem Chanel beigetreten");
-    }
+  if (commandBody.includes("set") && commandBody.includes("owner") && !owner) {
+    owner = message.author.id;
+    message.reply("Du bist nun der Besitzer des NESA-Bots");
+    StoreData();
   }
 
   if (commandBody === "reload") {
@@ -93,10 +92,16 @@ client.on("messageCreate", async function (message) {
     }
   }
 
-  if (commandBody.includes("set") && commandBody.includes("owner") && !owner) {
-    owner = message.author.id;
-    message.reply("Du bist nun der Besitzer dieses Bots");
-    StoreData();
+  if (commandBody === "join" && message.author.id == owner) {
+    if (chanels.includes(message.channelId)) {
+      message.reply("Guten Tag, ich bin bereits hier");
+    } else {
+      chanels.push(message.channelId);
+      StoreData();
+
+      console.log(`Joinde chanel ${message.channel.name}`);
+      message.reply("Okay, bin diesem Chanel beigetreten");
+    }
   }
 });
 

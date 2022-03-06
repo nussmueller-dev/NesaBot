@@ -14,7 +14,6 @@
     "jshint": "^2.13.4",
     "moment": "^2.29.1",
     "node-schedule": "^2.1.0",
-    "puppeteer": "^13.2.0",
-    "request": "^2.88.2"
+    "puppeteer": "^13.4.1"
   }
 }
