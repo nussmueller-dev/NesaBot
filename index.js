@@ -103,6 +103,18 @@ client.on("messageCreate", async function (message) {
       message.reply("Okay, bin diesem Chanel beigetreten");
     }
   }
+
+  if (commandBody === "test" && message.author.id == owner) {
+    FilterChanels();
+
+    chanels.forEach((chanel) => {
+      let serverChanel = client.channels.cache.get(chanel);
+  
+      if (serverChanel) {
+        serverChanel.send('test');
+      }
+    });
+  }
 });
 
 client.login(config.BOT_TOKEN);
@@ -168,14 +180,13 @@ function InformAboutMark(mark) {
   text += `:arrow_right: Beschreibung: ${mark.title} \n`;
   text += `:arrow_right: Gewichtung: ${mark.weight} \n`;
 
-  let deletedChanels = [];
+  FilterChanels();
+
   chanels.forEach((chanel) => {
     let serverChanel = client.channels.cache.get(chanel);
 
     if (serverChanel) {
       serverChanel.send(text);
-    } else {
-      deletedChanels.push(chanel);
     }
   });
 
@@ -184,6 +195,17 @@ function InformAboutMark(mark) {
 
     if (user) {
       user.send(text);
+    }
+  });
+}
+
+function FilterChanels(){
+  let deletedChanels = [];
+  chanels.forEach((chanel) => {
+    let serverChanel = client.channels.cache.get(chanel);
+
+    if (!serverChanel) {
+      deletedChanels.push(chanel);
     }
   });
 
