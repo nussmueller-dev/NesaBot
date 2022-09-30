@@ -17,8 +17,7 @@ steps:
     REGISTRY:
       from_secret: docker-registry
   settings:
-    registry: 
-      from_secret: $REGISTRY
+    registry: $REGISTRY
     username: 
       from_secret: docker-username
     password: 
