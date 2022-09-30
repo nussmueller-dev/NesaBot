@@ -9,7 +9,7 @@ steps:
     CONFIG:
       from_secret: nesa-config
   commands:
-    - echo $${CONFIG} > config.json
+    - echo ${CONFIG} > config.json
 
 - name: build
   image: plugins/docker
@@ -23,7 +23,7 @@ steps:
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: $${REGISTRY}/nesabot
+    repo: ${REGISTRY}/nesabot
     tags: latest
     dry_run: false
     purge: true
