@@ -17,7 +17,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
+COPY ./src .
 
 RUN echo -n > data.json
 

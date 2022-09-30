@@ -31,7 +31,7 @@ const job = schedule.scheduleJob("*/30 * * * *", function () {
   }, timeoutMills);
 });
 
-LoadData();
+// LoadData();
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -80,7 +80,7 @@ client.on("messageCreate", async function (message) {
     commandBody == 'i'
   ) {
     if (commandBody.includes("not") || commandBody.includes("dont") || commandBody.includes("remove")) {
-      if(usersToMention.includes(message.author.id)){
+      if (usersToMention.includes(message.author.id)) {
         usersToMention.splice(usersToMention.indexOf(message.author.id), 1);
         message.reply("Okay, du wirst von nun an nicht mehr informiert, wenn es neue Noten gibt");
         StoreData();
@@ -109,7 +109,7 @@ client.on("messageCreate", async function (message) {
 
     chanels.forEach((chanel) => {
       let serverChanel = client.channels.cache.get(chanel);
-  
+
       if (serverChanel) {
         serverChanel.send('test');
       }
@@ -191,15 +191,13 @@ function InformAboutMark(mark) {
   });
 
   usersToMention.forEach((userId) => {
-    var user = client.users.cache.find((user) => user.id == userId);
-
-    if (user) {
+    client.users.fetch(userId).then((user) => {
       user.send(text);
-    }
+    });
   });
 }
 
-function FilterChanels(){
+function FilterChanels() {
   let deletedChanels = [];
   chanels.forEach((chanel) => {
     let serverChanel = client.channels.cache.get(chanel);

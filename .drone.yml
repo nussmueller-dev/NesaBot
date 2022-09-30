@@ -1,0 +1,63 @@
+kind: pipeline
+type: docker
+name: main
+
+steps:
+- name: pre-build
+  image: alpine
+  environment:
+    CONFIG:
+      from_secret: nesa-config
+  commands:
+    - cd /usr/src/app
+    - echo $${CONFIG} > config.json
+
+- name: build
+  image: plugins/docker
+  settings:
+    registry: 
+      from_secret: docker-registry
+    username: 
+      from_secret: docker-username
+    password: 
+      from_secret: docker-password
+    repo: nesabot
+    tags: latest
+    dry_run: true
+    purge: true
+
+trigger:
+  event:
+  - push
+  - pull_request
+
+---
+
+kind: pipeline
+type: docker
+name: after
+
+steps:
+- name: deploy-to-server
+  image: appleboy/drone-ssh
+  settings:
+    host: 
+      from_secret: server-url
+    username:
+      from_secret: server-username
+    port: 
+      from_secret: server-port
+    key:
+      from_secret: server-key 
+    command_timeout: 2m
+    script:
+      - cd /home/docker/NesaBot
+      - docker compose pull
+      - docker compose down
+      - docker compose up -d
+
+trigger:
+  event:
+  - promote
+  target:
+  - production
