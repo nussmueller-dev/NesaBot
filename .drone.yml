@@ -9,7 +9,6 @@ steps:
     CONFIG:
       from_secret: nesa-config
   commands:
-    - cd /usr/src/app
     - echo $${CONFIG} > config.json
 
 - name: build
