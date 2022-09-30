@@ -23,7 +23,6 @@ steps:
     repo: nesabot
     tags: latest
     dry_run: false
-    purge: true
 
 trigger:
   event:
