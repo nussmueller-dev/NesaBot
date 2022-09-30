@@ -23,7 +23,7 @@ steps:
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: "$${REGISTRY}/nesabot"
+    repo: ${from_secret: docker-registry}/nesabot
     tags: latest
     dry_run: false
     purge: true
