@@ -18,12 +18,12 @@ steps:
       from_secret: docker-registry
   settings:
     registry: 
-      from_secret: docker-registry
+      from_secret: ${REGISTRY}
     username: 
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: "${DRONE_COMMIT_MESSAGE}/nesabot"
+    repo: "${REGISTRY}/nesabot"
     tags: latest
     dry_run: false
     purge: true
