@@ -22,7 +22,7 @@ steps:
       from_secret: docker-password
     repo: nesabot
     tags: latest
-    dry_run: true
+    dry_run: false
     purge: true
 
 trigger:
