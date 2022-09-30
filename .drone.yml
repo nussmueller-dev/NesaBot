@@ -2,10 +2,6 @@ kind: pipeline
 type: docker
 name: main
 
-environment:
-  REGISTRY:
-    from_secret: docker-registry
-
 steps:
 - name: pre-build
   image: alpine
@@ -18,12 +14,13 @@ steps:
 - name: build
   image: plugins/docker
   settings:
-    registry: ${REGISTRY}
+    registry: 
+      from_secret: docker-registry
     username: 
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: "${REGISTRY}/nesabot"
+    repo: $${DOCKER_REGISTRY}/nesabot
     tags: latest
     dry_run: false
     purge: true
