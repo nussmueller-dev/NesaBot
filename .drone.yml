@@ -17,7 +17,6 @@ steps:
   environment:
     REGISTRY:
       from_secret: docker-registry
-    REPO: ${REGISTRY}/nesabot
   settings:
     registry: 
       from_secret: docker-registry
@@ -25,7 +24,7 @@ steps:
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: ${REGISTRY}
+    repo: $${REGISTRY}/nesabot
     tags: latest
     dry_run: false
     purge: true
