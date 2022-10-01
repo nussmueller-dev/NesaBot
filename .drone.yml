@@ -14,14 +14,17 @@ steps:
 - name: build
   image: plugins/docker
   settings:
-    registry: docker.nussmueller.dev
+    registry: 
+      from_secret: docker-registry
     username: 
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: docker.nussmueller.dev/nesabot
+    repo: 
+      from_secret: docker-repo
     tags: latest
     dry_run: false
+    purge: true
 
 trigger:
   event:
