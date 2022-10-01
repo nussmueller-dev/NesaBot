@@ -14,7 +14,7 @@ steps:
 - name: build
   image: plugins/docker
   settings:
-    registry: ${DOCKER-REGISTRY}
+    registry: ${DOCKER_REGISTRY}
     username: 
       from_secret: docker-username
     password: 
