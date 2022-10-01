@@ -13,14 +13,15 @@ steps:
 
 - name: build
   image: plugins/docker
-  secrets: [ docker_registry ]
   settings:
-    registry: $DOCKER_REGISTRY
+    registry: 
+      from_secret: docker-registry
     username: 
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: "$${DOCKER_REGISTRY}/nesabott"
+    repo: 
+      from_secret: docker-repo
     tags: latest
     dry_run: false
     purge: true
