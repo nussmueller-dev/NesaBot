@@ -13,16 +13,13 @@ steps:
 
 - name: build
   image: plugins/docker
-  environment:
-    DOCKER_REGISTRY:
-      from_secret: docker_registry
   settings:
-    registry: ${DOCKER_REGISTRY}
+    registry: <+secrets.getValue("docker_registry")>
     username: 
       from_secret: docker-username
     password: 
       from_secret: docker-password
-    repo: "$${DOCKER_REGISTRY}/nesabot"
+    repo: <+secrets.getValue("docker_registry"+"/nesabot")>/nesabot
     tags: latest
     dry_run: false
     purge: true
