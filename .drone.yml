@@ -22,7 +22,6 @@ steps:
     repo: docker.nussmueller.dev/nesabot
     tags: latest
     dry_run: false
-    purge: true
 
 trigger:
   event:
