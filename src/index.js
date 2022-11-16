@@ -31,7 +31,7 @@ const job = schedule.scheduleJob("*/30 * * * *", function () {
   }, timeoutMills);
 });
 
-// LoadData();
+LoadData();
 
 client.once("ready", () => {
   console.log("Ready!");
