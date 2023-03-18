@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.15.3",
+    "@types/node-schedule": "^2.1.0",
     "nodemon": "^2.0.21",
     "rimraf": "^4.4.0",
     "ts-node": "^10.9.1",
