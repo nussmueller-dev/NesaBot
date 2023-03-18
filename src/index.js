@@ -33,92 +33,6 @@ const job = schedule.scheduleJob("*/30 * * * *", function () {
 
 LoadData();
 
-client.once("ready", () => {
-  console.log("Ready!");
-});
-
-client.on("messageCreate", async function (message) {
-  if (message.author.bot) return;
-  if (!message.content.startsWith(discordPrefix)) return;
-
-  const commandBody = message.content.slice(discordPrefix.length).toLowerCase();
-
-  if (commandBody.includes("set") && commandBody.includes("owner") && !owner) {
-    owner = message.author.id;
-    message.reply("Du bist nun der Besitzer des NESA-Bots");
-    StoreData();
-  }
-
-  if (commandBody === "reload") {
-    if (
-      !lastReloadTime ||
-      lastReloadTime.valueOf() < moment().subtract(5, "minutes").valueOf()
-    ) {
-      await CheckMarks();
-
-      if (currentToken) {
-        console.log(
-          `Reloadet at ${lastReloadTime.format("DD.MM.YYYY HH:mm:ss")}`
-        );
-        message.reply("Okay, die Noten wurden nochmals geprüft");
-      } else {
-        console.log(
-          `Reload failed at ${lastReloadTime.format("DD.MM.YYYY HH:mm:ss")}`
-        );
-        message.reply("Die Noten konnten leider nicht geladen werden");
-      }
-    } else {
-      message.reply(
-        "Sorry, die Noten wurden gerade aktualisiert und können deshalb nicht erneut aktualisiert werden"
-      );
-    }
-  }
-
-  if (
-    commandBody.includes("inform") ||
-    commandBody.includes("mention") ||
-    commandBody == 'i'
-  ) {
-    if (commandBody.includes("not") || commandBody.includes("dont") || commandBody.includes("remove")) {
-      if (usersToMention.includes(message.author.id)) {
-        usersToMention.splice(usersToMention.indexOf(message.author.id), 1);
-        message.reply("Okay, du wirst von nun an nicht mehr informiert, wenn es neue Noten gibt");
-        StoreData();
-      }
-    } else {
-      usersToMention.push(message.author.id);
-      message.reply("Okay, du wirst von nun an informiert, wenn es neue Noten gibt");
-      StoreData();
-    }
-  }
-
-  if (commandBody === "join" && message.author.id == owner) {
-    if (chanels.includes(message.channelId)) {
-      message.reply("Guten Tag, ich bin bereits hier");
-    } else {
-      chanels.push(message.channelId);
-      StoreData();
-
-      console.log(`Joinde chanel ${message.channel.name}`);
-      message.reply("Okay, bin diesem Chanel beigetreten");
-    }
-  }
-
-  if (commandBody === "test" && message.author.id == owner) {
-    FilterChanels();
-
-    chanels.forEach((chanel) => {
-      let serverChanel = client.channels.cache.get(chanel);
-
-      if (serverChanel) {
-        serverChanel.send('test');
-      }
-    });
-  }
-});
-
-client.login(config.BOT_TOKEN);
-
 async function CheckMarks() {
   let newMarks = [];
   let reqConfig = {
@@ -174,47 +88,7 @@ async function CheckMarks() {
   StoreData();
 }
 
-function InformAboutMark(mark) {
-  let text = "Neue Note wurde auf Nesa zur Verfügung gestellt: \n";
-  text += `:arrow_right: Fach: ${mark.subject} \n`;
-  text += `:arrow_right: Beschreibung: ${mark.title} \n`;
-  text += `:arrow_right: Gewichtung: ${mark.weight} \n`;
 
-  FilterChanels();
-
-  chanels.forEach((chanel) => {
-    let serverChanel = client.channels.cache.get(chanel);
-
-    if (serverChanel) {
-      serverChanel.send(text);
-    }
-  });
-
-  usersToMention.forEach((userId) => {
-    client.users.fetch(userId).then((user) => {
-      user.send(text);
-    });
-  });
-}
-
-function FilterChanels() {
-  let deletedChanels = [];
-  chanels.forEach((chanel) => {
-    let serverChanel = client.channels.cache.get(chanel);
-
-    if (!serverChanel) {
-      deletedChanels.push(chanel);
-    }
-  });
-
-  deletedChanels.forEach((chanel) => {
-    chanels.splice(chanels.indexOf(chanel), 1);
-  });
-
-  if (deletedChanels.length > 0) {
-    StoreData();
-  }
-}
 
 async function LoadNewToken() {
   currentToken = await TokenHandler.GetToken();
