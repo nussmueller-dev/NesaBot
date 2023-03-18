@@ -11,9 +11,10 @@ const intents = new Intents([
 
 export class TokenHandler {
   private client: Client;
-  private storageHandler: StorageHandler = new StorageHandler();
+  private storageHandler: StorageHandler;
 
   constructor() {
+    this.storageHandler = StorageHandler.getInstance();
     this.storageHandler.loadData();
 
     this.client = new Client({ intents: intents });

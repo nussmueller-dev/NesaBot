@@ -4,10 +4,19 @@ const dataFilePath = dataFolderPath + "/" + dataFileName;
 const fs = require("fs");
 
 export class StorageHandler {
+  private static instance: StorageHandler;
   data = new StorageData();
 
   constructor() {
     this.loadData();
+  }
+
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new StorageHandler();
+    }
+
+    return this.instance;
   }
 
   loadData() {
