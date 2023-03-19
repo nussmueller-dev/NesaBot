@@ -1,5 +1,5 @@
 import qrcode from "qrcode-terminal";
-import WAWebJS, { Client, LocalAuth } from "whatsapp-web.js";
+import WAWebJS, { Chat, Client, LocalAuth, Message } from "whatsapp-web.js";
 import { Mark, MarksHandler } from "./marksHandler";
 import { StorageHandler, dataFolderPath } from "./storageHandler";
 
@@ -89,6 +89,10 @@ export class WhatsappHandler {
         }
       }
 
+      if (messageBody.startsWith("resolve number ") && isOwner) {
+        await this.onResolveNumberCommand(msg);
+      }
+
       if (
         (messageBody === "resolve" ||
           messageBody === "mark" ||
@@ -96,19 +100,7 @@ export class WhatsappHandler {
         isOwner &&
         msg.hasQuotedMsg
       ) {
-        let quotedMsg = await msg.getQuotedMessage();
-
-        if (quotedMsg.body.includes("Id: ")) {
-          let dirtyId = quotedMsg.body.split("Id: ")[1];
-          let markId = dirtyId.split(" ")[0];
-
-          let mark = await MarksHandler.getMarkById(markId);
-          if (mark) {
-            msg.reply(`Du hast in dieser Prüfung die Note *${mark.mark}*`);
-          } else {
-            msg.reply("Note wurde nicht gefunden");
-          }
-        }
+        this.onResolveMarkCommand(msg, chat);
       }
 
       if (
@@ -116,38 +108,96 @@ export class WhatsappHandler {
         messageBody.includes("mention") ||
         messageBody === "i"
       ) {
-        if (
-          messageBody.includes("not") ||
-          messageBody.includes("dont") ||
-          messageBody.includes("don't") ||
-          messageBody.includes("remove")
-        ) {
-          if (
-            this.storageHandler.data.whatsappIdsToMention.includes(
-              chat.id._serialized
-            )
-          ) {
-            this.storageHandler.data.whatsappIdsToMention.splice(
-              this.storageHandler.data.whatsappIdsToMention.indexOf(
-                chat.id._serialized
-              ),
-              1
-            );
-            msg.reply(
-              "Okay, du wirst von nun an nicht mehr informiert, wenn es neue Noten gibt"
-            );
-          }
-        } else {
-          this.storageHandler.data.whatsappIdsToMention.push(
-            chat.id._serialized
-          );
-          msg.reply(
-            "Okay, du wirst von nun an informiert, wenn es neue Noten gibt"
-          );
-        }
-        this.storageHandler.saveData();
+        this.onInformCommand(msg, chat);
       }
     });
+  }
+
+  private async onResolveNumberCommand(msg: Message) {
+    let messageSpit = msg.body.split(" ");
+
+    if (messageSpit.length !== 3) {
+      msg.reply("Bitte gib eine Nummer an");
+      return;
+    }
+
+    let number = messageSpit[2];
+    number = number.replace(/[^\d]/g, "");
+
+    let contactId = await this.client.getNumberId(number);
+
+    if (!contactId) {
+      msg.reply("Kontakt-Id wurde nicht gefunden");
+      return;
+    }
+
+    let contact = await this.client.getContactById(contactId._serialized);
+
+    if (!contact) {
+      msg.reply("Kontakt wurde nicht gefunden");
+      return;
+    }
+
+    let chat = await contact.getChat();
+
+    if (!chat) {
+      msg.reply("Chat wurde nicht gefunden");
+      return;
+    }
+
+    let text = `Name: ${contact.name} \n`;
+    text += `PushName: ${contact.pushname} \n`;
+    text += `Chat-Id: ${chat.id._serialized} \n`;
+    msg.reply(text);
+  }
+
+  private onInformCommand(msg: Message, chat: Chat) {
+    let messageBody = msg.body.toLowerCase();
+
+    if (
+      messageBody.includes("not") ||
+      messageBody.includes("dont") ||
+      messageBody.includes("don't") ||
+      messageBody.includes("remove")
+    ) {
+      if (
+        this.storageHandler.data.whatsappIdsToMention.includes(
+          chat.id._serialized
+        )
+      ) {
+        this.storageHandler.data.whatsappIdsToMention.splice(
+          this.storageHandler.data.whatsappIdsToMention.indexOf(
+            chat.id._serialized
+          ),
+          1
+        );
+        msg.reply(
+          "Okay, du wirst von nun an nicht mehr informiert, wenn es neue Noten gibt"
+        );
+      }
+    } else {
+      this.storageHandler.data.whatsappIdsToMention.push(chat.id._serialized);
+      msg.reply(
+        "Okay, du wirst von nun an informiert, wenn es neue Noten gibt"
+      );
+    }
+    this.storageHandler.saveData();
+  }
+
+  private async onResolveMarkCommand(msg: Message, chat: Chat) {
+    let quotedMsg = await msg.getQuotedMessage();
+
+    if (quotedMsg.body.includes("Id: ")) {
+      let dirtyId = quotedMsg.body.split("Id: ")[1];
+      let markId = dirtyId.split(" ")[0];
+
+      let mark = await MarksHandler.getMarkById(markId);
+      if (mark) {
+        msg.reply(`Du hast in dieser Prüfung die Note *${mark.mark}*`);
+      } else {
+        msg.reply("Note wurde nicht gefunden");
+      }
+    }
   }
 
   private setupClientEvents() {
