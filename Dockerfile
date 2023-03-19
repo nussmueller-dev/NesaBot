@@ -5,12 +5,10 @@ RUN apk add --no-cache chromium && apk add tzdata
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY . .
 
 RUN npm ci --only=production
+RUN npm install --save typescript rimraf
+RUN npm run build
 
-COPY ./src .
-
-RUN echo -n > data.json
-
-CMD [ "node", "index.js" ]
+CMD [ "node", "./build/index.js" ]
