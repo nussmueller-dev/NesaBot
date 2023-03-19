@@ -1,4 +1,4 @@
-const dataFolderPath = "./storage";
+export const dataFolderPath = "./storage";
 const dataFileName = "data.json";
 const dataFilePath = dataFolderPath + "/" + dataFileName;
 const fs = require("fs");
