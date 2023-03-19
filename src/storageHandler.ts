@@ -44,4 +44,6 @@ export class StorageData {
   chanels: string[] = [];
   checkedMarks: string[] = [];
   usersToMention: string[] = [];
+  whatsappIdsToMention: string[] = [];
+  whatsappOwner: string = "";
 }

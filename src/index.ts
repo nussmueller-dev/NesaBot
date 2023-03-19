@@ -2,7 +2,7 @@ import moment from "moment";
 import schedule from "node-schedule";
 import { MarksHandler } from "./marksHandler";
 
-const marksHandler: MarksHandler = new MarksHandler();
+MarksHandler.init();
 
 console.log(`Start at ${moment().format("DD.MM.YYYY HH:mm:ss")}`);
 
@@ -14,6 +14,6 @@ schedule.scheduleJob("*/30 * * * *", async function () {
 
   setTimeout(() => {
     console.log(`ScheduleJob at ${moment().format("DD.MM.YYYY HH:mm:ss")}`);
-    marksHandler.checkMarks();
+    MarksHandler.checkMarks();
   }, timeoutMills);
 });
