@@ -1,7 +1,7 @@
 import { Client, Intents, TextChannel } from "discord.js";
 import config from "./config/config.json";
+import { Mark } from "./marksHandler";
 import { StorageHandler } from "./storageHandler";
-import { Mark } from "./util";
 
 const commandPrefix = "!";
 const intents = new Intents([
@@ -9,17 +9,25 @@ const intents = new Intents([
   Intents.FLAGS.GUILD_MESSAGES,
 ]);
 
-export class TokenHandler {
+export class DiscordHandler {
+  private static instance: DiscordHandler;
   private client: Client;
   private storageHandler: StorageHandler;
 
   constructor() {
     this.storageHandler = StorageHandler.getInstance();
-    this.storageHandler.loadData();
 
     this.client = new Client({ intents: intents });
     this.setupCommands();
     this.clientLogin();
+  }
+
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new DiscordHandler();
+    }
+
+    return this.instance;
   }
 
   public informAboutMark(mark: Mark) {
@@ -45,6 +53,18 @@ export class TokenHandler {
         user.send(text);
       });
     });
+  }
+
+  public askForNewPassword() {
+    if (this.storageHandler.data.owner) {
+      var user = this.client.users.cache.find(
+        (user) => user.id == this.storageHandler.data.owner
+      );
+
+      if (user) {
+        user.send("Gib mir dis neue beschissene Passwort du Vogel");
+      }
+    }
   }
 
   private setupCommands() {
@@ -74,6 +94,7 @@ export class TokenHandler {
         if (
           commandBody.includes("not") ||
           commandBody.includes("dont") ||
+          commandBody.includes("don't") ||
           commandBody.includes("remove")
         ) {
           if (

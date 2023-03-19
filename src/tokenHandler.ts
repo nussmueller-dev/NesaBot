@@ -1,16 +1,34 @@
 import puppeteer from "puppeteer";
 import config from "./config/config.json";
+import { StorageHandler } from "./storageHandler";
 import { sleep } from "./util";
 
 export class TokenHandler {
-  static async GetToken() {
+  private storageHandler: StorageHandler;
+
+  constructor() {
+    this.storageHandler = StorageHandler.getInstance();
+  }
+
+  async loadNewToken() {
+    this.storageHandler.data.activeToken = (await this.getToken()) ?? "";
+    this.storageHandler.saveData();
+
+    if (this.storageHandler.data.activeToken) {
+      console.log("Got new Token");
+    } else {
+      console.error("No Token");
+    }
+  }
+
+  async getToken() {
     const browser = await puppeteer.launch({
       args: ["--no-sandbox"],
       executablePath: "/usr/bin/chromium-browser",
     });
 
     const page = await browser.newPage();
-    let token = null;
+    let token: string | undefined = undefined;
 
     await page.goto(config.LOGIN_URL);
 
@@ -52,6 +70,6 @@ export class TokenHandler {
 
     await browser.close();
 
-    return token;
+    return token as string | undefined;
   }
 }
