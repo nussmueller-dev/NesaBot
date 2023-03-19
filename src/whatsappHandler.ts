@@ -8,6 +8,7 @@ const clientOptions: WAWebJS.ClientOptions = {
     dataPath: dataFolderPath + "/whatsapp",
   }),
   puppeteer: {
+    args: ["--no-sandbox"],
     executablePath: "/usr/bin/chromium-browser",
   },
 };
