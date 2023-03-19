@@ -7,6 +7,9 @@ const clientOptions: WAWebJS.ClientOptions = {
   authStrategy: new LocalAuth({
     dataPath: dataFolderPath + "/whatsapp",
   }),
+  puppeteer: {
+    executablePath: "/usr/bin/chromium-browser",
+  },
 };
 
 export class WhatsappHandler {
