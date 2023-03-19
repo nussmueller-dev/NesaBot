@@ -1,10 +1,20 @@
 import moment from "moment";
 import schedule from "node-schedule";
+import { MarksHandler } from "./marksHandler";
 
-async function main() {
-  console.log(`Start at ${moment().format("DD.MM.YYYY HH:mm:ss")}`);
+const marksHandler: MarksHandler = new MarksHandler();
 
-  schedule.scheduleJob("*/15 * * * *", async function () {});
-}
+console.log(`Start at ${moment().format("DD.MM.YYYY HH:mm:ss")}`);
+marksHandler.checkMarks();
 
-main();
+schedule.scheduleJob("*/30 * * * *", async function () {
+  let maxTimeoutMinutes = 11;
+  let timeoutMills = Math.floor(
+    Math.random() * (maxTimeoutMinutes * 60 * 1000)
+  );
+
+  setTimeout(() => {
+    console.log(`ScheduleJob at ${moment().format("DD.MM.YYYY HH:mm:ss")}`);
+    marksHandler.checkMarks();
+  }, timeoutMills);
+});
