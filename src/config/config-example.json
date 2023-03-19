@@ -1,0 +1,7 @@
+{
+  "BOT_TOKEN": "YOUR-BOT-TOKEN",
+  "LOGIN_URL": "https://www.schul-netz.com/mobile/login?mandant=https:%2F%2Fgbs.nesa-sg.ch",
+  "API_URL": "https://gbs.nesa-sg.ch/rest/v1",
+  "USERNAME": "YOUR-USERNAME",
+  "PASSWORD": "YOUR-PASSWORD"
+}
