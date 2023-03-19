@@ -5,7 +5,6 @@ import { MarksHandler } from "./marksHandler";
 const marksHandler: MarksHandler = new MarksHandler();
 
 console.log(`Start at ${moment().format("DD.MM.YYYY HH:mm:ss")}`);
-marksHandler.checkMarks();
 
 schedule.scheduleJob("*/30 * * * *", async function () {
   let maxTimeoutMinutes = 11;
