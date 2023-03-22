@@ -20,7 +20,9 @@ To deploy NesaBot using Docker, follow these steps:
 2. Create a `.env` file based on the `.env.example` file
 3. Update the `.env` file with your NESA login credentials and the appropriate WhatsApp and/or Discord API keys
 4. Build the Docker image by running the following command in the root directory of the project: docker build -t nesabot:latest .
-5. Run the Docker container with the following command:
+5. Run the Docker container with the following command: docker run -d --name nesabot -v pwd/.env:/app/.env nesabot:latest
+
+This command will start the container in detached mode, mount the `.env` file, and run the bot.
 
 ## 💻 Usage
 
@@ -28,7 +30,7 @@ Once the bot is running, it will periodically check the NESA website for new gra
 
 ## 📝 Notes
 
-- The bot checks the grades every 15 Minutes, so you might not get informes emediatly
+- The bot checks the grades every 15 Minutes, so you might not get informs immediately
 - The bot currently only supports WhatsApp and Discord, but could be extended to support other messaging platforms in the future.
 
 ## 📄 License
