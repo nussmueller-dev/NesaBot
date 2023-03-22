@@ -21,10 +21,6 @@ Once the bot is running, it will periodically check the NESA website for new gra
 - The bot checks the grades every 15 Minutes, so you might not get informes emediatly
 - The bot currently only supports WhatsApp and Discord, but could be extended to support other messaging platforms in the future.
 
-## 🤝 Contributing
-
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
-
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
