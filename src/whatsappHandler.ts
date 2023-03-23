@@ -82,6 +82,12 @@ export class WhatsappHandler {
         msg.reply("Reloaded");
       }
 
+      if (chat.isGroup) {
+        if (messageBody === "!join") {
+        }
+        return;
+      }
+
       if (messageBody === "set owner") {
         if (this.storageHandler.data.whatsappOwner) {
           msg.reply("Es gibt schon einen Besitzer");
