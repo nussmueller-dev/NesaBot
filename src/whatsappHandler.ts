@@ -84,6 +84,12 @@ export class WhatsappHandler {
 
       if (chat.isGroup) {
         if (messageBody === "!join") {
+          this.storageHandler.data.whatsappIdsToMention.push(
+            chat.id._serialized
+          );
+          msg.reply(
+            "Okay, ihr werdet künftig informiert, wenn es neue Noten gibt"
+          );
         }
         return;
       }
