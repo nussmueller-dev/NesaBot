@@ -190,12 +190,22 @@ export class WhatsappHandler {
         msg.reply(
           "Okay, du wirst von nun an nicht mehr informiert, wenn es neue Noten gibt"
         );
+      } else {
+        msg.reply("Du wirst sowieso nicht informiert :D");
       }
     } else {
-      this.storageHandler.data.whatsappIdsToMention.push(chat.id._serialized);
-      msg.reply(
-        "Okay, du wirst von nun an informiert, wenn es neue Noten gibt"
-      );
+      if (
+        !this.storageHandler.data.whatsappIdsToMention.includes(
+          chat.id._serialized
+        )
+      ) {
+        this.storageHandler.data.whatsappIdsToMention.push(chat.id._serialized);
+        msg.reply(
+          "Okay, du wirst von nun an informiert, wenn es neue Noten gibt"
+        );
+      } else {
+        msg.reply("Du wirst sowieso informiert :D");
+      }
     }
     this.storageHandler.saveData();
   }
