@@ -232,7 +232,7 @@ export class WhatsappHandler {
   private setupClientEvents() {
     this.client.on("qr", (qr) => {
       qrcode.generate(qr, { small: true });
-      this.discordHandler.askForNewPassword();
+      this.discordHandler.askForScanningQrCode();
     });
 
     this.client.on("authenticated", () => {
