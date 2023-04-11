@@ -67,6 +67,18 @@ export class DiscordHandler {
     }
   }
 
+  public askForScanningQrCode() {
+    if (this.storageHandler.data.owner) {
+      var user = this.client.users.cache.find(
+        (user) => user.id == this.storageHandler.data.owner
+      );
+
+      if (user) {
+        user.send("Whatsapp QR-Code scannen");
+      }
+    }
+  }
+
   private setupCommands() {
     this.client.on("messageCreate", async (message) => {
       if (message.author.bot) return;

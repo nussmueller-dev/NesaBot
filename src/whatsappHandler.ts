@@ -1,5 +1,6 @@
 import qrcode from "qrcode-terminal";
 import WAWebJS, { Chat, Client, LocalAuth, Message } from "whatsapp-web.js";
+import { DiscordHandler } from "./discordHandler";
 import { Mark, MarksHandler } from "./marksHandler";
 import { StorageHandler, dataFolderPath } from "./storageHandler";
 
@@ -15,11 +16,13 @@ const clientOptions: WAWebJS.ClientOptions = {
 
 export class WhatsappHandler {
   private static instance: WhatsappHandler;
+  private discordHandler: DiscordHandler;
   private storageHandler: StorageHandler;
   private client = new Client(clientOptions);
 
   constructor() {
     this.storageHandler = StorageHandler.getInstance();
+    this.discordHandler = DiscordHandler.getInstance();
 
     this.setupClientEvents();
     this.setupCommands();
@@ -229,6 +232,7 @@ export class WhatsappHandler {
   private setupClientEvents() {
     this.client.on("qr", (qr) => {
       qrcode.generate(qr, { small: true });
+      this.discordHandler.askForNewPassword();
     });
 
     this.client.on("authenticated", () => {
