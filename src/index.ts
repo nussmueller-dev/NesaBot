@@ -6,8 +6,8 @@ MarksHandler.init();
 
 console.log(`Start at ${moment().format("DD.MM.YYYY HH:mm:ss")}`);
 
-schedule.scheduleJob("*/15 * * * *", async function () {
-  let maxTimeoutMinutes = 5;
+schedule.scheduleJob("*/10 * * * *", async function () {
+  let maxTimeoutMinutes = 3;
   let timeoutMills = Math.floor(
     Math.random() * (maxTimeoutMinutes * 60 * 1000)
   );
