@@ -146,6 +146,26 @@ export class DiscordHandler {
           message.reply("Okay, bin diesem Chanel beigetreten");
         }
       }
+
+      if (
+        commandBody === "leave" &&
+        message.author.id == this.storageHandler.data.owner
+      ) {
+        if (this.storageHandler.data.chanels.includes(message.channelId)) {
+          this.storageHandler.data.chanels.splice(
+            this.storageHandler.data.chanels.indexOf(
+              message.channelId
+            ),
+            1
+          );
+          this.storageHandler.saveData();
+
+          console.log(`Leaved chanel ${message.channel.id}`);
+          message.reply("Okay, hab diesen Chanel verlassen");
+        } else {
+          message.reply("Guten Tag, aber ich bin nicht hier");
+        }
+      }
     });
   }
 
